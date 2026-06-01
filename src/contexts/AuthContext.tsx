@@ -51,18 +51,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setFirebaseUser(fbUser);
 
       if (fbUser) {
-        // Check admin custom claim
-        const tokenResult = await fbUser.getIdTokenResult();
-        setIsAdmin(!!tokenResult.claims.admin);
+        try {
+          // Check admin custom claim
+          const tokenResult = await fbUser.getIdTokenResult();
+          setIsAdmin(!!tokenResult.claims.admin);
 
-        // Fetch user doc from Firestore
-        const userRef = doc(db, 'users', fbUser.uid);
-        const userSnap = await getDoc(userRef);
+          // Fetch user doc from Firestore
+          const userRef = doc(db, 'users', fbUser.uid);
+          const userSnap = await getDoc(userRef);
 
-        if (userSnap.exists()) {
-          setUser({ uid: fbUser.uid, ...userSnap.data() } as User);
-        } else {
-          // New user — will need onboarding
+          if (userSnap.exists()) {
+            setUser({ uid: fbUser.uid, ...userSnap.data() } as User);
+          } else {
+            // New user — will need onboarding
+            setUser(null);
+          }
+        } catch (error) {
+          console.error("Auth context error:", error);
           setUser(null);
         }
       } else {

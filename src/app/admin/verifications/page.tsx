@@ -8,7 +8,7 @@ import { VerificationRequest } from '@/types';
 import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
 import Modal from '@/components/ui/Modal';
-import { IoCheckmarkOutline, IoCloseOutline, IoDocumentTextOutline } from 'react-icons/io5';
+import { IoCheckmarkOutline, IoCloseOutline, IoDocumentTextOutline, IoShieldCheckmarkOutline } from 'react-icons/io5';
 
 export default function AdminVerificationsPage() {
   const { user } = useAuth();

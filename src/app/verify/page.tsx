@@ -5,7 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import AuthGuard from '@/components/auth/AuthGuard';
 import Button from '@/components/ui/Button';
 import Select from '@/components/ui/Select';
-import { uploadImage } from '@/lib/storage';
+import { uploadToCloudinary } from '@/lib/cloudinary';
 import { db } from '@/lib/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
@@ -25,8 +25,7 @@ export default function VerificationPage() {
     setIsSubmitting(true);
 
     try {
-      // Upload to private verification-documents folder
-      const url = await uploadImage(file, `verification-documents/${user.uid}`);
+      const url = await uploadToCloudinary(file, { folder: `nidora/verification/${user.uid}` });
       
       // Create request in Firestore
       await addDoc(collection(db, 'verification_requests'), {
@@ -103,7 +102,7 @@ export default function VerificationPage() {
                     </span>
                     <input 
                       type="file" 
-                      accept="image/*,.pdf" 
+                      accept="image/jpeg,image/png,image/webp"
                       className="hidden" 
                       onChange={(e) => setFile(e.target.files?.[0] || null)} 
                     />

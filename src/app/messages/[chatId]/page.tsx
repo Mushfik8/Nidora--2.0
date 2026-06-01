@@ -7,7 +7,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import AuthGuard from '@/components/auth/AuthGuard';
 import { Chat, Message } from '@/types';
 import Button from '@/components/ui/Button';
-import { IoSend, IoChevronBack } from 'react-icons/io5';
+import { IoSend, IoChevronBack, IoCheckmarkCircle } from 'react-icons/io5';
 import Link from 'next/link';
 
 export default function ChatThreadPage({ params }: { params: Promise<{ chatId: string }> }) {
@@ -19,6 +19,7 @@ export default function ChatThreadPage({ params }: { params: Promise<{ chatId: s
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
+  const [otherUserVerified, setOtherUserVerified] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -26,7 +27,8 @@ export default function ChatThreadPage({ params }: { params: Promise<{ chatId: s
 
     // Fetch Chat Meta
     const fetchChat = async () => {
-      const docSnap = await getDoc(doc(db, 'chats', chatId));
+      try {
+        const docSnap = await getDoc(doc(db, 'chats', chatId));
       if (docSnap.exists()) {
         const chatData = { id: docSnap.id, ...docSnap.data() } as Chat;
         // Verify user is part of chat
@@ -35,6 +37,19 @@ export default function ChatThreadPage({ params }: { params: Promise<{ chatId: s
           return;
         }
         setChat(chatData);
+
+        // Check if other user is verified
+        const otherId = chatData.participants.find(id => id !== user.uid);
+        if (otherId) {
+          const otherUserDoc = await getDoc(doc(db, 'users', otherId));
+          if (otherUserDoc.exists() && otherUserDoc.data().isVerified) {
+            setOtherUserVerified(true);
+          }
+        }
+      }
+      } catch (error) {
+        console.error('Error fetching chat meta:', error);
+        window.location.href = '/messages';
       }
     };
     fetchChat();
@@ -65,6 +80,9 @@ export default function ChatThreadPage({ params }: { params: Promise<{ chatId: s
           updateDoc(doc(db, 'chats', chatId, 'messages', msgDoc.id), { read: true });
         }
       });
+    }, (error) => {
+      console.error('Error listening to chat messages:', error);
+      setLoading(false);
     });
 
     return () => unsubscribe();
@@ -116,7 +134,10 @@ export default function ChatThreadPage({ params }: { params: Promise<{ chatId: s
               </Link>
               <img src={otherUserPhoto} alt={otherUserName} className="w-10 h-10 rounded-full" />
               <div>
-                <h2 className="font-semibold text-surface-900">{otherUserName}</h2>
+                <div className="flex items-center gap-1.5">
+                  <h2 className="font-semibold text-surface-900">{otherUserName}</h2>
+                  {otherUserVerified && <IoCheckmarkCircle className="text-verified" size={16} title="Verified User" />}
+                </div>
                 {chat.listingId && (
                   <Link href={`/listings/${chat.listingId}`} className="text-xs text-primary-600 hover:underline">
                     {chat.listingTitle || 'View Listing'}

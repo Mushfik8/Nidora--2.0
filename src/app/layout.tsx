@@ -3,6 +3,9 @@ import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Navbar from "@/components/layout/Navbar";
+import BottomNav from "@/components/layout/BottomNav";
+import Fab from "@/components/ui/Fab";
+import ToastProvider from "@/components/ui/ToastProvider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -49,13 +52,17 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-white text-surface-900">
         <AuthProvider>
-          <Navbar />
-          <main className="flex-1 flex flex-col">
-            {children}
-          </main>
+          <ToastProvider />
+          <div className="flex flex-col min-h-screen">
+            <Navbar />
+            <main className="flex-1 flex flex-col">
+              {children}
+            </main>
+            <BottomNav />
+            <Fab />
+          </div>
         </AuthProvider>
       </body>
     </html>
   );
 }
-

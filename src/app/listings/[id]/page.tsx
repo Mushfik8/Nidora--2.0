@@ -303,7 +303,7 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
                 </li>
                 <li className="flex justify-between border-b border-surface-100 pb-2">
                   <span className="text-surface-500">Property Views</span>
-                  <span className="font-medium text-surface-900">{listing.views}</span>
+                  <span className="font-medium text-surface-900 flex items-center gap-1">👁 {listing.views}</span>
                 </li>
               </ul>
             </div>
