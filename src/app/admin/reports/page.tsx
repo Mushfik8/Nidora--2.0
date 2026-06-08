@@ -19,9 +19,11 @@ export default function AdminReportsPage() {
 
   const fetchReports = async () => {
     try {
-      const q = query(collection(db, 'reports'), orderBy('createdAt', 'desc'));
+      const q = query(collection(db, 'reports'));
       const snap = await getDocs(q);
-      setReports(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      const data = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      data.sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0));
+      setReports(data);
     } catch (error) {
       console.error('Error fetching reports:', error);
     } finally {

@@ -18,9 +18,11 @@ export default function AdminUsersPage() {
 
   const fetchUsers = async () => {
     try {
-      const q = query(collection(db, 'users'), orderBy('createdAt', 'desc'));
+      const q = query(collection(db, 'users'));
       const snap = await getDocs(q);
-      setUsers(snap.docs.map(doc => ({ uid: doc.id, ...doc.data() })) as User[]);
+      const data = snap.docs.map(doc => ({ uid: doc.id, ...doc.data() })) as User[];
+      data.sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0));
+      setUsers(data);
     } catch (error) {
       console.error('Error fetching users:', error);
     } finally {

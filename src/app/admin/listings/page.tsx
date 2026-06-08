@@ -19,9 +19,11 @@ export default function AdminListingsPage() {
 
   const fetchListings = async () => {
     try {
-      const q = query(collection(db, 'listings'), orderBy('createdAt', 'desc'));
+      const q = query(collection(db, 'listings'));
       const snap = await getDocs(q);
-      setListings(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Listing[]);
+      const data = snap.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Listing[];
+      data.sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0));
+      setListings(data);
     } catch (error) {
       console.error('Error fetching listings:', error);
     } finally {

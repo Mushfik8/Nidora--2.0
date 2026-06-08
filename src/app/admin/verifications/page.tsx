@@ -27,11 +27,12 @@ export default function AdminVerificationsPage() {
     try {
       const q = query(
         collection(db, 'verification_requests'),
-        where('status', '==', 'pending'),
-        orderBy('createdAt', 'asc')
+        where('status', '==', 'pending')
       );
       const snap = await getDocs(q);
-      setRequests(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })) as VerificationRequest[]);
+      const data = snap.docs.map(doc => ({ id: doc.id, ...doc.data() })) as VerificationRequest[];
+      data.sort((a, b) => (a.createdAt?.toMillis() || 0) - (b.createdAt?.toMillis() || 0));
+      setRequests(data);
     } catch (error) {
       console.error('Error fetching verifications:', error);
     } finally {
