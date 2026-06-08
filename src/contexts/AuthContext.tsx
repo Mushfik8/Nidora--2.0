@@ -54,7 +54,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         try {
           // Check admin custom claim
           const tokenResult = await fbUser.getIdTokenResult();
-          setIsAdmin(!!tokenResult.claims.admin);
+          let isCookieAdmin = false;
+          try {
+            const res = await fetch('/api/admin-check');
+            if (res.ok) {
+              const data = await res.json();
+              isCookieAdmin = data.isAdmin;
+            }
+          } catch(e) {}
+          
+          setIsAdmin(!!tokenResult.claims.admin || isCookieAdmin);
 
           // Fetch user doc from Firestore
           const userRef = doc(db, 'users', fbUser.uid);

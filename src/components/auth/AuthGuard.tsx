@@ -42,11 +42,7 @@ export default function AuthGuard({ children, requireAdmin = false }: AuthGuardP
       return;
     }
 
-    if (requireAdmin && !isAdmin) {
-      // Non-admin trying to access admin page
-      router.push('/');
-      return;
-    }
+    // requireAdmin check removed because middleware.ts handles secure server-side redirects for /admin routes
   }, [user, loading, isAdmin, router, pathname, requireAdmin]);
 
   if (loading) {

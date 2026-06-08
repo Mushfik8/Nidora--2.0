@@ -221,11 +221,21 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
         )}
 
         {/* Image Gallery */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 h-[40vh] md:h-[50vh] rounded-2xl overflow-hidden">
+        {/* Mobile Gallery (Swipeable) */}
+        <div className="flex md:hidden overflow-x-auto snap-x snap-mandatory gap-4 mb-6 h-[40vh] rounded-2xl hide-scrollbar">
+          {listing.images.map((url, idx) => (
+            <div key={idx} className="min-w-full h-full snap-center shrink-0 bg-surface-200 rounded-2xl overflow-hidden">
+              <img src={url} alt={`Property ${idx + 1}`} className="w-full h-full object-cover" />
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop Gallery */}
+        <div className="hidden md:grid grid-cols-2 gap-4 mb-8 h-[50vh] rounded-2xl overflow-hidden">
           <div className="bg-surface-200 w-full h-full">
             <img src={listing.images[0]} alt="Property" className="w-full h-full object-cover" />
           </div>
-          <div className="hidden md:grid grid-cols-2 grid-rows-2 gap-4">
+          <div className="grid grid-cols-2 grid-rows-2 gap-4">
             {listing.images.slice(1, 5).map((url, idx) => (
               <div key={idx} className="bg-surface-200 w-full h-full rounded-xl overflow-hidden">
                 <img src={url} alt={`Property ${idx+2}`} className="w-full h-full object-cover" />
