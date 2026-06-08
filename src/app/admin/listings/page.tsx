@@ -91,7 +91,6 @@ export default function AdminListingsPage() {
                     <td className="px-6 py-4">
                       <Badge variant={
                         l.status === 'active' ? 'success' : 
-                        l.status === 'pending' ? 'warning' : 
                         l.status === 'deleted' ? 'danger' : 'default'
                       } className="capitalize">
                         {l.status}
