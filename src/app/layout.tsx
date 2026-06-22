@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { UnreadProvider } from "@/contexts/UnreadContext";
 import Navbar from "@/components/layout/Navbar";
 import BottomNav from "@/components/layout/BottomNav";
 import Fab from "@/components/ui/Fab";
@@ -52,6 +53,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-white text-surface-900">
         <AuthProvider>
+          <UnreadProvider>
           <ToastProvider />
           <div className="flex flex-col min-h-screen">
             <Navbar />
@@ -61,6 +63,7 @@ export default function RootLayout({
             <BottomNav />
             <Fab />
           </div>
+          </UnreadProvider>
         </AuthProvider>
       </body>
     </html>

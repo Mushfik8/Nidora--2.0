@@ -123,23 +123,25 @@ export default function ChatThreadPage({ params }: { params: Promise<{ chatId: s
 
   return (
     <AuthGuard>
-      <div className="flex-1 flex flex-col h-[calc(100vh-64px)] bg-surface-50">
-        <div className="flex-1 page-container max-w-4xl py-6 flex flex-col h-full">
+      {/* Mobile: full-screen chat taking entire viewport below the top navbar */}
+      {/* Desktop: contained card layout */}
+      <div className="flex-1 flex flex-col chat-viewport bg-surface-50">
+        <div className="flex-1 flex flex-col md:page-container md:max-w-4xl md:py-6 h-full">
           
-          <div className="flex-1 flex flex-col bg-white rounded-3xl border border-surface-200 card-shadow overflow-hidden h-full">
+          <div className="flex-1 flex flex-col bg-white md:rounded-3xl md:border md:border-surface-200 md:card-shadow overflow-hidden h-full">
             {/* Chat Header */}
-            <div className="h-20 px-6 border-b border-surface-200 flex items-center gap-4 bg-white z-10 shrink-0">
-              <Link href="/messages" className="text-surface-500 hover:text-surface-900 md:hidden">
+            <div className="h-14 md:h-20 px-3 md:px-6 border-b border-surface-200 flex items-center gap-3 md:gap-4 bg-white z-10 shrink-0">
+              <Link href="/messages" className="text-surface-500 hover:text-surface-900 shrink-0">
                 <IoChevronBack size={24} />
               </Link>
-              <img src={otherUserPhoto} alt={otherUserName} className="w-10 h-10 rounded-full" />
-              <div>
+              <img src={otherUserPhoto} alt={otherUserName} className="w-9 h-9 md:w-10 md:h-10 rounded-full shrink-0" />
+              <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-1.5">
-                  <h2 className="font-semibold text-surface-900">{otherUserName}</h2>
-                  {otherUserVerified && <IoCheckmarkCircle className="text-verified" size={16} title="Verified User" />}
+                  <h2 className="font-semibold text-surface-900 text-sm md:text-base truncate">{otherUserName}</h2>
+                  {otherUserVerified && <IoCheckmarkCircle className="text-verified shrink-0" size={16} title="Verified User" />}
                 </div>
                 {chat.listingId && (
-                  <Link href={`/listings/${chat.listingId}`} className="text-xs text-primary-600 hover:underline">
+                  <Link href={`/listings/${chat.listingId}`} className="text-xs text-primary-600 hover:underline truncate block">
                     {chat.listingTitle || 'View Listing'}
                   </Link>
                 )}
@@ -147,7 +149,7 @@ export default function ChatThreadPage({ params }: { params: Promise<{ chatId: s
             </div>
 
             {/* Messages Area */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-surface-50">
+            <div className="flex-1 overflow-y-auto p-3 md:p-6 space-y-2 md:space-y-4 bg-surface-50">
               {messages.length === 0 ? (
                 <div className="h-full flex items-center justify-center text-surface-400 text-sm">
                   Say hi to {otherUserName}!
@@ -158,20 +160,20 @@ export default function ChatThreadPage({ params }: { params: Promise<{ chatId: s
                   const showAvatar = !isMe && (idx === 0 || messages[idx - 1].senderId === user?.uid);
                   
                   return (
-                    <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'} mb-4`}>
-                      <div className={`flex max-w-[75%] gap-2 ${isMe ? 'flex-row-reverse' : 'flex-row'}`}>
+                    <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'} mb-2 md:mb-4`}>
+                      <div className={`flex max-w-[85%] md:max-w-[75%] gap-2 ${isMe ? 'flex-row-reverse' : 'flex-row'}`}>
                         
                         {!isMe && (
-                          <div className="w-8 shrink-0">
-                            {showAvatar && <img src={otherUserPhoto} className="w-8 h-8 rounded-full" />}
+                          <div className="w-7 md:w-8 shrink-0">
+                            {showAvatar && <img src={otherUserPhoto} className="w-7 h-7 md:w-8 md:h-8 rounded-full" />}
                           </div>
                         )}
                         
                         <div className={`
-                          px-4 py-2 rounded-2xl
+                          px-3 py-2 md:px-4 rounded-2xl
                           ${isMe ? 'bg-primary-600 text-white rounded-br-sm' : 'bg-white border border-surface-200 text-surface-900 rounded-bl-sm shadow-sm'}
                         `}>
-                          <p className="whitespace-pre-wrap break-words">{msg.text}</p>
+                          <p className="whitespace-pre-wrap break-words text-sm md:text-base">{msg.text}</p>
                           <div className={`text-[10px] mt-1 ${isMe ? 'text-primary-100 text-right' : 'text-surface-400 text-left'}`}>
                             {msg.createdAt?.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                           </div>
@@ -185,20 +187,20 @@ export default function ChatThreadPage({ params }: { params: Promise<{ chatId: s
             </div>
 
             {/* Input Area */}
-            <form onSubmit={handleSendMessage} className="p-4 bg-white border-t border-surface-200 shrink-0 flex items-center gap-2">
+            <form onSubmit={handleSendMessage} className="p-2 md:p-4 bg-white border-t border-surface-200 shrink-0 flex items-center gap-2 safe-area-bottom">
               <input
                 type="text"
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
                 placeholder="Type your message..."
-                className="flex-1 bg-surface-100 rounded-full px-6 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20"
+                className="flex-1 bg-surface-100 rounded-full px-4 md:px-6 py-2.5 md:py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20"
               />
               <button
                 type="submit"
                 disabled={!newMessage.trim()}
-                className="w-12 h-12 flex items-center justify-center rounded-full bg-primary-600 text-white disabled:opacity-50 disabled:bg-surface-300 transition-colors"
+                className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full bg-primary-600 text-white disabled:opacity-50 disabled:bg-surface-300 transition-colors shrink-0"
               >
-                <IoSend size={18} className="ml-1" />
+                <IoSend size={16} className="ml-0.5" />
               </button>
             </form>
           </div>

@@ -43,17 +43,17 @@ export default function InboxPage() {
 
   return (
     <AuthGuard>
-      <div className="flex-1 bg-surface-50 py-10">
+      <div className="flex-1 bg-surface-50 py-4 md:py-10 pb-20 md:pb-10">
         <div className="page-container max-w-4xl">
-          <h1 className="text-3xl font-bold font-[var(--font-heading)] text-surface-900 mb-8">
+          <h1 className="text-2xl md:text-3xl font-bold font-[var(--font-heading)] text-surface-900 mb-4 md:mb-8">
             Messages
           </h1>
 
-          <div className="bg-white rounded-3xl border border-surface-200 overflow-hidden card-shadow">
+          <div className="bg-white rounded-2xl md:rounded-3xl border border-surface-200 overflow-hidden card-shadow">
             {loading ? (
-              <div className="p-4 space-y-4">
+              <div className="p-3 md:p-4 space-y-3 md:space-y-4">
                 {[1, 2, 3].map(n => (
-                  <div key={n} className="flex gap-4">
+                  <div key={n} className="flex gap-3 md:gap-4">
                     <Skeleton variant="circular" width={48} height={48} />
                     <div className="flex-1 space-y-2">
                       <Skeleton width="30%" />
@@ -72,21 +72,21 @@ export default function InboxPage() {
 
                   return (
                     <li key={chat.id}>
-                      <Link href={`/messages/${chat.id}`} className="flex items-center gap-4 p-4 md:p-6 hover:bg-surface-50 transition-colors">
+                      <Link href={`/messages/${chat.id}`} className="flex items-center gap-3 md:gap-4 p-3 md:p-6 hover:bg-surface-50 active:bg-surface-100 transition-colors">
                         <img 
                           src={otherUserPhoto} 
                           alt={otherUserName}
-                          className="w-12 h-12 rounded-full border border-surface-200"
+                          className="w-11 h-11 md:w-12 md:h-12 rounded-full border border-surface-200 shrink-0"
                         />
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-center justify-between mb-1">
-                            <h3 className="font-semibold text-surface-900 truncate">{otherUserName}</h3>
-                            <span className="text-xs text-surface-400 whitespace-nowrap ml-4">{timeAgo}</span>
+                          <div className="flex items-center justify-between mb-0.5 md:mb-1">
+                            <h3 className="font-semibold text-surface-900 text-sm md:text-base truncate">{otherUserName}</h3>
+                            <span className="text-[10px] md:text-xs text-surface-400 whitespace-nowrap ml-2 md:ml-4 shrink-0">{timeAgo}</span>
                           </div>
-                          <p className="text-sm text-surface-600 truncate mb-1">
+                          <p className="text-xs md:text-sm text-surface-600 truncate mb-0.5 md:mb-1">
                             {chat.listingTitle || 'General Inquiry'}
                           </p>
-                          <p className="text-sm text-surface-500 truncate">
+                          <p className="text-xs md:text-sm text-surface-500 truncate">
                             {chat.lastMessage || 'No messages yet'}
                           </p>
                         </div>
@@ -96,12 +96,12 @@ export default function InboxPage() {
                 })}
               </ul>
             ) : (
-              <div className="text-center py-20 px-4">
-                <div className="w-16 h-16 bg-surface-100 rounded-full flex items-center justify-center mx-auto mb-4 text-surface-400">
-                  <IoChatbubbleEllipsesOutline size={32} />
+              <div className="text-center py-16 md:py-20 px-4">
+                <div className="w-14 h-14 md:w-16 md:h-16 bg-surface-100 rounded-full flex items-center justify-center mx-auto mb-4 text-surface-400">
+                  <IoChatbubbleEllipsesOutline size={28} />
                 </div>
-                <h3 className="text-lg font-semibold text-surface-900 mb-2">No messages yet</h3>
-                <p className="text-surface-500 max-w-sm mx-auto">
+                <h3 className="text-base md:text-lg font-semibold text-surface-900 mb-2">No messages yet</h3>
+                <p className="text-sm md:text-base text-surface-500 max-w-sm mx-auto">
                   When you contact property owners or renters contact you, those conversations will appear here.
                 </p>
               </div>

@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
+import { useUnread } from '@/contexts/UnreadContext';
 import Button from '../ui/Button';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
@@ -9,6 +10,7 @@ import { IoMenu, IoClose } from 'react-icons/io5';
 
 export default function Navbar() {
   const { user, loading, signInWithGoogle, signOut, isAdmin } = useAuth();
+  const { unreadCount } = useUnread();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -44,9 +46,14 @@ export default function Navbar() {
                 </Link>
                 <Link
                   href="/messages"
-                  className="text-sm font-medium text-surface-600 hover:text-surface-900 transition-colors"
+                  className="relative text-sm font-medium text-surface-600 hover:text-surface-900 transition-colors"
                 >
                   Messages
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-2 -right-4 min-w-[18px] h-[18px] flex items-center justify-center rounded-full bg-danger-500 text-white text-[10px] font-bold px-1 leading-none shadow-sm animate-badge-pop">
+                      {unreadCount > 99 ? '99+' : unreadCount}
+                    </span>
+                  )}
                 </Link>
                 {isAdmin && (
                   <Link
@@ -93,9 +100,14 @@ export default function Navbar() {
           <div className="md:hidden flex items-center">
             <button
               onClick={() => setMobileMenuOpen(true)}
-              className="p-2 -mr-2 text-surface-600 hover:text-surface-900"
+              className="p-2 -mr-2 text-surface-600 hover:text-surface-900 relative"
             >
               <IoMenu size={24} />
+              {unreadCount > 0 && (
+                <span className="absolute top-0.5 right-0.5 min-w-[16px] h-[16px] flex items-center justify-center rounded-full bg-danger-500 text-white text-[9px] font-bold px-0.5 leading-none shadow-sm">
+                  {unreadCount > 99 ? '99+' : unreadCount}
+                </span>
+              )}
             </button>
           </div>
         </div>
@@ -143,8 +155,13 @@ export default function Navbar() {
                     <Link href="/favorites" onClick={() => setMobileMenuOpen(false)}>
                       Favorites
                     </Link>
-                    <Link href="/messages" onClick={() => setMobileMenuOpen(false)}>
+                    <Link href="/messages" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2">
                       Messages
+                      {unreadCount > 0 && (
+                        <span className="min-w-[22px] h-[22px] flex items-center justify-center rounded-full bg-danger-500 text-white text-xs font-bold px-1.5 leading-none shadow-sm">
+                          {unreadCount > 99 ? '99+' : unreadCount}
+                        </span>
+                      )}
                     </Link>
                     <Link href="/profile" onClick={() => setMobileMenuOpen(false)}>
                       My Profile

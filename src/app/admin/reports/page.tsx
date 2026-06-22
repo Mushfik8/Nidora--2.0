@@ -21,7 +21,7 @@ export default function AdminReportsPage() {
     try {
       const q = query(collection(db, 'reports'));
       const snap = await getDocs(q);
-      const data = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const data = snap.docs.map(doc => ({ id: doc.id, ...doc.data() } as any));
       data.sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0));
       setReports(data);
     } catch (error) {

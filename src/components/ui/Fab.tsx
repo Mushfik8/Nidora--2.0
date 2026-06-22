@@ -28,8 +28,8 @@ export default function Fab() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY]);
 
-  // Don't show FAB on wizard, onboarding, or auth pages
-  if (pathname.includes('/listings/new') || pathname === '/onboarding') {
+  // Don't show FAB on wizard, onboarding, auth pages, or chat threads
+  if (pathname.includes('/listings/new') || pathname === '/onboarding' || /^\/messages\/[^/]+$/.test(pathname)) {
     return null;
   }
 

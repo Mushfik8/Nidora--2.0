@@ -234,3 +234,40 @@ body {
     padding-right: 2rem;
   }
 }
+
+/* ─── Notification Badge ───────────────────────────────── */
+
+@keyframes badgePop {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.animate-badge-pop {
+  animation: badgePop 0.3s ease-out forwards;
+}
+
+/* ─── Chat Viewport ────────────────────────────────────── */
+
+.chat-viewport {
+  /* Use dynamic viewport height on mobile to account for browser chrome */
+  height: calc(100dvh - 64px); /* 64px = navbar height */
+}
+
+@supports not (height: 100dvh) {
+  .chat-viewport {
+    height: calc(100vh - 64px);
+  }
+}
+
+/* Safe area padding for input on notch devices */
+.safe-area-bottom {
+  padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+}
+
+@media (min-width: 768px) {
+  .safe-area-bottom {
+    padding-bottom: 1rem;
+  }
+}
+
